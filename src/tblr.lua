@@ -1,6 +1,7 @@
 local term = require("plterm")
 
-term.color = function(fg, bg, bold)
+term.color = function(colors)
+	local fg, bg, bold = table.unpack(colors)
 	if fg then
 		if fg == 0 then
 			term.out("\027[39m")
@@ -74,16 +75,16 @@ _M.create = function(headers, style)
 			width = width + w + margin + 2
 		end
 
-		term.color(nil, nil, 1)
+		term.color({ nil, nil, 1 })
 		term.outf("." .. string.rep("—", width - 2) .. ".\n")
 		term.outf("| ")
 		for p, c in ipairs(self.h) do
 			local suffix = col_widths[p] - #c + margin
 			if p == self.sort_column then
-				term.color(nil, 44)
+				term.color({ nil, 44 })
 			end
 			term.outf(c .. string.rep(" ", suffix))
-			term.color(nil, 0)
+			term.color({ nil, 0 })
 			if p ~= #self.h then
 				term.outf("| ")
 			else
@@ -92,7 +93,7 @@ _M.create = function(headers, style)
 		end
 		term.outf("\n")
 		term.outf("." .. string.rep("…", width - 2) .. ".\n")
-		term.color(0, 0, 0)
+		term.color({ 0, 0, 0 })
 
 		for i, r in ipairs(self.t) do
 			term.outf("| ")
@@ -100,19 +101,19 @@ _M.create = function(headers, style)
 				local suffix = col_widths[p] - #c + margin
 				local decor = self.style(p, c)
 				if decor then
-					term.color(decor.fg, decor.bg, decor.bold)
+					term.color(decor)
 				end
 				term.outf(c .. string.rep(" ", suffix))
 				if decor then
-					term.color(0, 0, 0)
+					term.color({ 0, 0, 0 })
 				end
 				term.outf("| ")
 			end
 			term.outf("\n")
 		end
-		term.color(nil, nil, 1)
+		term.color({ nil, nil, 1 })
 		term.outf("+" .. string.rep("—", width - 2) .. "+\n")
-		term.color(0, 0, 0)
+		term.color({ 0, 0, 0 })
 		term.outf(string.rep(" ", width) .. "\n")
 	end
 	return tbl

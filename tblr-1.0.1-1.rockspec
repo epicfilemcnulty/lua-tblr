@@ -1,8 +1,8 @@
 package = "tblr"
- version = "1.0.0-1"
+ version = "1.0.1-1"
  source = {
     url = "git+https://github.com/epicfilemcnulty/lua-tblr.git",
-    tag = "v1.0.0"
+    tag = "v1.0.1"
  }
  description = {
     summary = "A module to create, sort and print out (aligned and optionally styled) table data",
