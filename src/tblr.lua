@@ -30,7 +30,7 @@ _M.create = function(headers, style)
 		style = style or function(col, val)
 			return nil
 		end,
-		sort_column = 1,
+		sort_column = 0,
 		add_row = function(self, row)
 			table.insert(self.t, row)
 		end,
@@ -54,7 +54,7 @@ _M.create = function(headers, style)
 		table.sort(self.t, self.cmp_func)
 	end
 
-	tbl.print = function(self)
+	tbl.print = function(self, x, y)
 		local rows = #self.t
 		local columns = #self.h
 		local col_widths = {}
@@ -75,46 +75,44 @@ _M.create = function(headers, style)
 			width = width + w + margin + 2
 		end
 
+		term.golc(y, x)
 		term.color({ nil, nil, 1 })
-		term.outf("." .. string.rep("—", width - 2) .. ".\n")
-		term.outf("| ")
+		term.outf("." .. string.rep("—", width - 2) .. ".")
+		term.golc(y + 1, x)
+		term.outf("|")
 		for p, c in ipairs(self.h) do
 			local suffix = col_widths[p] - #c + margin
 			if p == self.sort_column then
 				term.color({ nil, 44 })
 			end
-			term.outf(c .. string.rep(" ", suffix))
+			term.outf(" " .. c .. string.rep(" ", suffix))
 			term.color({ nil, 0 })
-			if p ~= #self.h then
-				term.outf("| ")
-			else
-				term.outf("|")
-			end
+			term.outf("|")
 		end
-		term.outf("\n")
-		term.outf("." .. string.rep("…", width - 2) .. ".\n")
+		term.golc(y + 2, x)
+		term.outf("." .. string.rep("…", width - 2) .. ".")
 		term.color({ 0, 0, 0 })
 
 		for i, r in ipairs(self.t) do
-			term.outf("| ")
+			term.golc(y + 2 + i, x)
+			term.outf("|")
 			for p, c in ipairs(r) do
 				local suffix = col_widths[p] - #c + margin
 				local decor = self.style(p, c)
 				if decor then
 					term.color(decor)
 				end
-				term.outf(c .. string.rep(" ", suffix))
+				term.outf(" " .. c .. string.rep(" ", suffix))
 				if decor then
 					term.color({ 0, 0, 0 })
 				end
-				term.outf("| ")
+				term.outf("|")
 			end
-			term.outf("\n")
 		end
+		term.golc(y + 3 + #self.t, x)
 		term.color({ nil, nil, 1 })
-		term.outf("+" .. string.rep("—", width - 2) .. "+\n")
+		term.outf("*" .. string.rep("—", width - 2) .. "*")
 		term.color({ 0, 0, 0 })
-		term.outf(string.rep(" ", width) .. "\n")
 	end
 	return tbl
 end
