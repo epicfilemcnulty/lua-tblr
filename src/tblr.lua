@@ -1,6 +1,6 @@
 local term = require("plterm")
 
-term.color = function(colors)
+local color = function(colors)
 	local fg, bg, bold = table.unpack(colors)
 	if fg then
 		if fg == 0 then
@@ -23,6 +23,7 @@ end
 
 local _M = {}
 
+_M.color = color
 _M.create = function(headers, style)
 	local tbl = {
 		t = {},
@@ -76,22 +77,22 @@ _M.create = function(headers, style)
 		end
 
 		term.golc(y, x)
-		term.color({ nil, nil, 1 })
+		color({ nil, nil, 1 })
 		term.outf("." .. string.rep("—", width - 2) .. ".")
 		term.golc(y + 1, x)
 		term.outf("|")
 		for p, c in ipairs(self.h) do
 			local suffix = col_widths[p] - #c + margin
 			if p == self.sort_column then
-				term.color({ nil, 44 })
+				color({ nil, 44 })
 			end
 			term.outf(" " .. c .. string.rep(" ", suffix))
-			term.color({ nil, 0 })
+			color({ nil, 0 })
 			term.outf("|")
 		end
 		term.golc(y + 2, x)
 		term.outf("." .. string.rep("…", width - 2) .. ".")
-		term.color({ 0, 0, 0 })
+		color({ 0, 0, 0 })
 
 		for i, r in ipairs(self.t) do
 			term.golc(y + 2 + i, x)
@@ -100,19 +101,19 @@ _M.create = function(headers, style)
 				local suffix = col_widths[p] - #c + margin
 				local decor = self.style(p, c)
 				if decor then
-					term.color(decor)
+					color(decor)
 				end
 				term.outf(" " .. c .. string.rep(" ", suffix))
 				if decor then
-					term.color({ 0, 0, 0 })
+					color({ 0, 0, 0 })
 				end
 				term.outf("|")
 			end
 		end
 		term.golc(y + 3 + #self.t, x)
-		term.color({ nil, nil, 1 })
+		color({ nil, nil, 1 })
 		term.outf("*" .. string.rep("—", width - 2) .. "*")
-		term.color({ 0, 0, 0 })
+		color({ 0, 0, 0 })
 	end
 	return tbl
 end
