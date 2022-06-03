@@ -16,6 +16,7 @@ package = "tblr"
     type = "builtin",
     modules = {
        tblr = "src/tblr.lua",
+       pgr = "src/pgr.lua",
        plterm = "src/plterm.lua",
     }
 }
